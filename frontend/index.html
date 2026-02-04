@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXWAVE - Intelligent Liquidity Provisioning on Solana</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nexwave-dark': '#1D155A',
+                        'nexwave-indigo': '#5347EF',
+                        'nexwave-cyan': '#00CBF9',
+                        'nexwave-light-blue': '#3DF4CE',
+                        'nexwave-off-white': '#F2F2F2'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(29, 21, 90, 0.8);
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(0, 203, 249, 0.3);
+        }
+        
+        .hover-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 203, 249, 0.5);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-nexwave-dark text-nexwave-off-white">
+    <!-- Three.js Canvas -->
+    <canvas id="three-canvas"></canvas>
+    
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass-effect border-b border-nexwave-indigo/20">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="h-8 w-auto">
+                    <img src="/assets/nexwave-logo.svg" alt="NEXWAVE" class="h-full w-auto" />
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="hover:text-nexwave-cyan transition-colors duration-300">Features</a>
+                    <a href="#how-it-works" class="hover:text-nexwave-cyan transition-colors duration-300">How It Works</a>
+                    <a href="#docs" class="hover:text-nexwave-cyan transition-colors duration-300">Docs</a>
+                </nav>
+                
+                <!-- Launch App Button -->
+                <button class="bg-nexwave-cyan text-nexwave-dark px-6 py-2 rounded-lg font-semibold hover-glow transition-all duration-300">
+                    Launch App
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative">
+        <div class="text-center z-10 px-6 max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Intelligent Liquidity<br>
+                <span class="text-nexwave-cyan">Provisioning</span> on Solana
+            </h1>
+            
+            <p class="text-xl md:text-2xl mb-8 text-nexwave-off-white/80 max-w-3xl mx-auto leading-relaxed">
+                Maximize your yield with automated, institutional-grade strategies. Our engine navigates the complexities of DeFi so you don't have to.
+            </p>
+            
+            <button class="bg-nexwave-cyan text-nexwave-dark px-12 py-4 rounded-lg text-xl font-semibold hover-glow transition-all duration-300 transform hover:scale-105">
+                Launch App
+            </button>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-nexwave-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="py-20 glass-effect">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Built for <span class="text-nexwave-cyan">Performance</span>
+                </h2>
+                <p class="text-xl text-nexwave-off-white/80 max-w-2xl mx-auto">
+                    Experience the next generation of automated liquidity management with cutting-edge technology.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Feature 1 -->
+                <div class="text-center p-8 rounded-xl bg-nexwave-dark/50 border border-nexwave-indigo/20 hover:border-nexwave-cyan/50 transition-all duration-300 fade-in">
+                    <div class="w-16 h-16 mx-auto mb-6 bg-nexwave-indigo/20 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-nexwave-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-nexwave-light-blue">Quantitative Strategies</h3>
+                    <p class="text-nexwave-off-white/80 leading-relaxed">
+                        Leverage sophisticated models that adapt to market volatility and optimize for maximum fee capture.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="text-center p-8 rounded-xl bg-nexwave-dark/50 border border-nexwave-indigo/20 hover:border-nexwave-cyan/50 transition-all duration-300 fade-in">
+                    <div class="w-16 h-16 mx-auto mb-6 bg-nexwave-indigo/20 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-nexwave-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-nexwave-light-blue">24/7 Automation</h3>
+                    <p class="text-nexwave-off-white/80 leading-relaxed">
+                        Our engine monitors the market around the clock, automatically rebalancing positions to keep your capital working efficiently.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="text-center p-8 rounded-xl bg-nexwave-dark/50 border border-nexwave-indigo/20 hover:border-nexwave-cyan/50 transition-all duration-300 fade-in">
+                    <div class="w-16 h-16 mx-auto mb-6 bg-nexwave-indigo/20 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-nexwave-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-nexwave-light-blue">Secure & Non-Custodial</h3>
+                    <p class="text-nexwave-off-white/80 leading-relaxed">
+                        Built with institutional-grade security. Your keys, your crypto. Always.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 glass-effect border-t border-nexwave-indigo/20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="h-8 w-auto mb-4 md:mb-0">
+                    <img src="/assets/nexwave-logo.svg" alt="NEXWAVE" class="h-full w-auto" />
+                </div>
+                
+                <div class="flex items-center space-x-8">
+                    <a href="#community" class="hover:text-nexwave-cyan transition-colors duration-300">Community</a>
+                    <a href="#twitter" class="hover:text-nexwave-cyan transition-colors duration-300">Twitter</a>
+                    <a href="#docs" class="hover:text-nexwave-cyan transition-colors duration-300">Documentation</a>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 pt-8 border-t border-nexwave-indigo/20 text-nexwave-off-white/60">
+                <p>&copy; 2024 NEXWAVE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Three.js Scene Setup
+        let scene, camera, renderer, wave, particles, mouse, raycaster;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        
+        // Initialize the Three.js scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            
+            // Create camera with perspective projection
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('three-canvas'),
+                antialias: true,
+                alpha: true 
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x1D155A, 1);
+            
+            // Create the digital liquidity wave
+            createWave();
+            
+            // Create floating orbs
+            createFloatingOrbs();
+            
+            // Setup mouse interaction
+            mouse = new THREE.Vector2();
+            raycaster = new THREE.Raycaster();
+            
+            // Add event listeners
+            document.addEventListener('mousemove', onMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Start animation loop
+            animate();
+        }
+        
+        // Create the main wave effect using particles
+        function createWave() {
+            const geometry = new THREE.PlaneGeometry(20, 10, 100, 50);
+            
+            // Create custom shader material for the wave effect
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    color1: { value: new THREE.Color(0x00CBF9) }, // Nexwave cyan
+                    color2: { value: new THREE.Color(0x3DF4CE) }, // Nexwave light blue
+                    opacity: { value: 0.8 }
+                },
+                vertexShader: `
+                    uniform float time;
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    
+                    void main() {
+                        vUv = uv;
+                        
+                        // Create wave motion
+                        vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                        float elevation = sin(modelPosition.x * 2.0 + time) * 0.5;
+                        elevation += sin(modelPosition.x * 4.0 + time * 2.0) * 0.25;
+                        elevation += sin(modelPosition.y * 3.0 + time * 1.5) * 0.3;
+                        
+                        modelPosition.z += elevation;
+                        vElevation = elevation;
+                        
+                        vec4 viewPosition = viewMatrix * modelPosition;
+                        vec4 projectedPosition = projectionMatrix * viewPosition;
+                        
+                        gl_Position = projectedPosition;
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                    uniform float opacity;
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    
+                    void main() {
+                        vec3 color = mix(color1, color2, vElevation + 0.5);
+                        gl_FragColor = vec4(color, opacity);
+                    }
+                `,
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+            
+            wave = new THREE.Mesh(geometry, material);
+            wave.rotation.x = -Math.PI * 0.3;
+            wave.position.y = -2;
+            scene.add(wave);
+        }
+        
+        // Create floating orbs that emerge from the wave
+        function createFloatingOrbs() {
+            const orbGeometry = new THREE.SphereGeometry(0.05, 16, 16);
+            const orbMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00CBF9,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            particles = [];
+            
+            // Create multiple orbs
+            for (let i = 0; i < 50; i++) {
+                const orb = new THREE.Mesh(orbGeometry, orbMaterial.clone());
+                
+                // Random starting position
+                orb.position.set(
+                    (Math.random() - 0.5) * 20,
+                    -3 + Math.random() * 2,
+                    (Math.random() - 0.5) * 10
+                );
+                
+                // Add custom properties for animation
+                orb.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.02,
+                        Math.random() * 0.05 + 0.01,
+                        (Math.random() - 0.5) * 0.02
+                    ),
+                    life: Math.random() * 100,
+                    maxLife: 100 + Math.random() * 100
+                };
+                
+                particles.push(orb);
+                scene.add(orb);
+            }
+        }
+        
+        // Handle mouse movement for camera interaction
+        function onMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / windowHalfX;
+            mouseY = (event.clientY - windowHalfY) / windowHalfY;
+        }
+        
+        // Handle window resize
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now() * 0.001;
+            
+            // Update wave animation
+            if (wave && wave.material.uniforms) {
+                wave.material.uniforms.time.value = time;
+            }
+            
+            // Update camera position based on mouse movement
+            camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 2 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            // Animate floating orbs
+            particles.forEach(orb => {
+                orb.position.add(orb.userData.velocity);
+                orb.userData.life++;
+                
+                // Fade out as orb ages
+                const lifeRatio = orb.userData.life / orb.userData.maxLife;
+                orb.material.opacity = Math.max(0, 0.8 * (1 - lifeRatio));
+                
+                // Reset orb when it dies
+                if (orb.userData.life > orb.userData.maxLife) {
+                    orb.position.set(
+                        (Math.random() - 0.5) * 20,
+                        -3 + Math.random() * 2,
+                        (Math.random() - 0.5) * 10
+                    );
+                    orb.userData.life = 0;
+                    orb.material.opacity = 0.8;
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Scroll animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        // Smooth scrolling for navigation links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            setupSmoothScrolling();
+            
+            // Handle scroll animations
+            window.addEventListener('scroll', handleScrollAnimations);
+            handleScrollAnimations(); // Check initial state
+        });
+    </script>
+</body>
+</html>
